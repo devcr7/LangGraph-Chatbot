@@ -17,9 +17,20 @@ while True:
         }
     }
 
-    response = chatbot.invoke(
-        {"messages": [HumanMessage(content=user_message)]},
-        config=config
+    # generator
+    stream = chatbot.stream(
+        {'messages': [HumanMessage(content=user_message)]},
+        config=config,
+        stream_mode='messages'
     )
 
-    print("AI:", response['messages'][-1].content)
+    for message_chunk, metadata in stream:
+        if message_chunk.content:
+            print(message_chunk.content, end = " ", flush=True)
+
+    # response = chatbot.invoke(
+    #     {"messages": [HumanMessage(content=user_message)]},
+    #     config=config
+    # )
+
+    # print("AI:", response['messages'][-1].content)

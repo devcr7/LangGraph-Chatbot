@@ -1,6 +1,6 @@
 import streamlit as st
 import uuid
-from backend.graph.workflow import build_graph
+from backend.graph.workflow import build_graph, retrieve_all_threads
 from langchain_core.messages import HumanMessage
 
 
@@ -14,7 +14,7 @@ def generate_thread_id():
 def add_thread(thread_id):
     """Adds a thread ID to the sidebar list if it doesn't exist."""
     if 'chat_threads' not in st.session_state:
-        st.session_state['chat_threads'] = []
+        st.session_state['chat_threads'] = retrieve_all_threads()
     if thread_id not in st.session_state['chat_threads']:
         st.session_state['chat_threads'].append(thread_id)
 

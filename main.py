@@ -18,15 +18,15 @@ while True:
     }
 
     # generator
-    stream = chatbot.stream(
-        {'messages': [HumanMessage(content=user_message)]},
-        config=config,
-        stream_mode='messages'
-    )
-
-    for message_chunk, metadata in stream:
-        if message_chunk.content:
-            print(message_chunk.content, end = " ", flush=True)
+    # stream = chatbot.stream(
+    #     {'messages': [HumanMessage(content=user_message)]},
+    #     config=config,
+    #     stream_mode='messages'
+    # )
+    #
+    # for message_chunk, metadata in stream:
+    #     if message_chunk.content:
+    #         print(message_chunk.content, end = " ", flush=True)
 
     # response = chatbot.invoke(
     #     {"messages": [HumanMessage(content=user_message)]},
@@ -34,3 +34,14 @@ while True:
     # )
 
     # print("AI:", response['messages'][-1].content)
+
+
+    # accessing state via thead_id
+    CONFIG = {'configurable': {'thread_id': "thread-1"}}
+
+    response = chatbot.invoke(
+        {'messages': [HumanMessage(content="Hi I'm Divyanshu")]},
+        config=CONFIG
+    )
+
+    print(chatbot.get_state(config=CONFIG).values['messages'])

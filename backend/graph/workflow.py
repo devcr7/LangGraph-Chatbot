@@ -2,7 +2,8 @@ from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.sqlite import SqliteSaver
 
 from backend.graph.state import ChatState
-from backend.graph.nodes import chat_node
+from backend.graph.nodes import chat_node, tool_node
+from langgraph.prebuilt import tools_condition
 
 import sqlite3
 
@@ -14,11 +15,15 @@ def build_graph():
     graph = StateGraph(ChatState)
 
     # nodes
-    graph.add_node('chat_node', chat_node)
+    graph.add_node("chat_node", chat_node)
+    graph.add_node("tools", tool_node)
 
     # edges
-    graph.add_edge(START, 'chat_node')
-    graph.add_edge('chat_node', END)
+    graph.add_edge(START, "chat_node")
+
+    # if the LLM asked for a tool, goto ToolNode, else finish
+    graph.add_conditional_edges("chat_node", tools_condition)
+    graph.add_edge("tools", "chat_node")
 
     return graph.compile(checkpointer=checkpointer)
 

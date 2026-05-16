@@ -1,7 +1,7 @@
 import streamlit as st
 import uuid
 from backend.graph.workflow import build_graph, retrieve_all_threads
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import HumanMessage, AIMessage
 
 
 # --- UTILITY FUNCTIONS ---
@@ -109,7 +109,7 @@ if user_input:
                     config=current_config,
                     stream_mode="messages"
             ):
-                if chunk.content:
+                if isinstance(chunk, AIMessage):
                     yield chunk.content
 
 
